@@ -1,0 +1,38 @@
+%code1;
+
+%dt=t2-t1;
+
+v=sqrt((t(j-1).x-t(j-2).x)*(t(j-1).x-t(j-2).x)+(t(j-1).y-t(j-2).y)*(t(j-1).y-t(j-2).y))/dt;
+d=v*dt;
+
+m=(t(j-1).y-t(j-2).y)/(t(j-1).x-t(j-2).x);
+A=1+m*m;
+B=-2*t(j-1).x-2*m*m*t(j-2).x+2*m*(t(j-2).y-t(j-1).y);
+C=t(j-1).x*t(j-1).x+m*m*(t(j-2).x)*(t(j-2).x)+(t(j-2).y-t(j-1).y)*(t(j-2).y-t(j-1).y)-2*m*(t(j-2).x)*(t(j-2).y-t(j-1).y)-d*d;
+xa=(-B+sqrt(B*B-4*A*C))/(2*A);
+xb=(-B-sqrt(B*B-4*A*C))/(2*A);
+
+ya=t(j-2).y+m*(xa-t(j-2).x);
+yb=t(j-2).y+m*(xb-t(j-2).x);
+if((xa==xb)&&(ya==yb))
+ t(j).x=xa;
+ t(j).y=ya;
+elseif((xa==t(j-2).x && ya==t(j-2).y)||(xb==t(j-2).x && yb==t(j-2).y))
+ if(xa==t(j-2).x && ya==t(j-2).y)
+  t(j).x=xb;
+  t(j).y=yb;
+ else
+  t(j).x=xa;
+  t(j).y=ya;
+ endif
+else
+ da=sqrt((t(j-2).x-xa)*(t(j-2).x-xa)+(t(j-2).y-ya)*(t(j-2).y-ya));
+ db=sqrt((t(j-2).x-xb)*(t(j-2).x-xb)+(t(j-2).y-yb)*(t(j-2).y-yb));
+ if(da<=db)
+  t(j).x=xb;
+  t(j).y=yb;
+ else
+  t(j).x=xa;
+  t(j).y=ya;
+ endif
+endif
